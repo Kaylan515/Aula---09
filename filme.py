@@ -56,8 +56,35 @@ def cadastrar_filme():
 
 # Criar a função para listar os filmes, atualizar e excluir
 def listar_filmes():
-    print("=== filmes cadastrados ===")
+    try:
+        print("=== filmes cadastrados ===")
+        with Session() as carrinho:
+            filmes = carrinho.query(Filme).all()
+            for filme in filmes:
+                print(f"Título: {filme.titulo}, Gênero: {filme.genero}, Ano: {filme.ano_lancamento}, Disponível: {filme.disponivel}")
+    except Exception as erro:
+        print(f"Ocorreu um erro: {erro}")
+
+def atualizar_filme():
+    print("=== Atualizar Filme ===")
+    titulo = input("Digite o título do filme que deseja atualizar: ")
+
     with Session() as carrinho:
-        filmes = carrinho.query(Filme).all()
-        for filme in filmes:
-            print(f"Título: {filme.titulo}, Gênero: {filme.genero}, Ano: {filme.ano_lancamento}, Disponível: {filme.disponivel}")
+        try:
+            filme = carrinho.query(Filme).filter_by(titulo=titulo).first()
+            if filme:
+                novo_titulo = input(f"Novo título (atual: {filme.titulo}): ")
+                novo_genero = input(f"Novo gênero (atual: {filme.genero}): ")
+                novo_ano = int(input(f"Novo ano de lançamento (atual: {filme.ano_lancamento}): "))
+                nova_nota = float(input(f"Nova nota (atual: {filme.nota}): "))
+                filme.titulo = novo_titulo
+                filme.genero = novo_genero
+                filme.ano_lancamento = novo_ano
+                filme.nota = nova_nota
+                carrinho.commit()
+                print("Filme atualizado com sucesso!")
+            else:
+                print("Filme não encontrado.")
+        except Exception as erro:
+            carrinho.rollback()
+            print(f"Ocorreu um erro: {erro}")
