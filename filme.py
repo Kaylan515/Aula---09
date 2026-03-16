@@ -55,4 +55,9 @@ def cadastrar_filme():
             print(f"Ocorreu um erro: {erro}")
 
 # Criar a função para listar os filmes, atualizar e excluir
-
+def listar_filmes():
+    print("=== filmes cadastrados ===")
+    with Session() as carrinho:
+        filmes = carrinho.query(Filme).all()
+        for filme in filmes:
+            print(f"Título: {filme.titulo}, Gênero: {filme.genero}, Ano: {filme.ano_lancamento}, Disponível: {filme.disponivel}")
