@@ -88,3 +88,20 @@ def atualizar_filme():
         except Exception as erro:
             carrinho.rollback()
             print(f"Ocorreu um erro: {erro}")
+
+def excluir_filme():
+    print("=== Excluir Filme ===")
+    titulo = input("Digite o título do filme que deseja excluir: ")
+
+    with Session() as carrinho:
+        try:
+            filme = carrinho.query(Filme).filter_by(titulo=titulo).first()
+            if filme:
+                carrinho.delete(filme)
+                carrinho.commit()
+                print("Filme excluído com sucesso!")
+            else:
+                print("Filme não encontrado.")
+        except Exception as erro:
+            carrinho.rollback()
+            print(f"Ocorreu um erro: {erro}")
