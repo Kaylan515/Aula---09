@@ -32,3 +32,27 @@ Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
+#Função para adicionar um filme
+def cadastrar_filme():
+    print("=== Cadastro de Filme ===")
+    titulo = input("Título: ")
+    genero = input("Gênero: ")
+    ano = int(input("Ano de Lançamento: "))
+    nota = float(input("Nota: "))
+
+    with Session() as carrinho:
+        try:
+            filme_existente = carrinho.query(Filme).filter_by(titulo=titulo,ano_lancamento=ano).first()
+            if filme_existente == None:
+                novo_filme = Filme(titulo, genero, ano, nota)
+                carrinho.add(novo_filme)
+                carrinho.commit()
+                print("Filme cadastrado com sucesso!")
+            else:
+                print("Já existe um filme com esse título e ano de lançamento.")
+        except Exception as erro:
+            carrinho.rollback()
+            print(f"Ocorreu um erro: {erro}")
+
+# Criar a função para listar os filmes, atualizar e excluir
+
